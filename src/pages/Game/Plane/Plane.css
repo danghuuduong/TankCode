@@ -1,0 +1,10 @@
+.plane {
+  position: absolute;
+  top: 20px;
+  transition: 0.2s linear;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: fit-content;
+  transform: scale(0.5);
+}

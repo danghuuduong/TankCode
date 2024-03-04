@@ -1,0 +1,16 @@
+.health-bar {
+  position: absolute;
+  bottom: 0;
+  transform: translateY(100%);
+  width: 300px;
+  height: 30px;
+  border: 2px solid #f5d8d8;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex !important;
+}
+.health-bar-fill {
+  background-color: #e21b00;
+  width: 50px;
+  border-right: 1px solid black;
+}

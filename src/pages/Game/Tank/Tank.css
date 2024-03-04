@@ -1,0 +1,9 @@
+.tank {
+  background-image: url("../../../img/tank.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  height: 170px;
+  position: absolute;
+  transition: 0.2s linear;
+}
