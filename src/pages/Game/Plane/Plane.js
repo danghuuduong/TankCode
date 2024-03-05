@@ -1,34 +1,55 @@
 import { useEffect, useState } from "react";
-import planeImg from "../../../img/plane.png"; // with import
 import Health from "./Health/Health";
 import "./Plane.css";
+import { useSelector } from "react-redux";
 const Plane = () => {
-  const [position, setPosition] = useState(500);
+  const [parametersTankPlane, setParametersTankPlane] = useState({
+    x: 1000,
+    isShow: true,
+  });
+  const topPlane = 20;
+
+  const explosionPosition = useSelector((state) => {
+    return state.explosionPosition;
+  });
+  useEffect(() => {
+    if (
+      parametersTankPlane.x <= explosionPosition.x &&
+      parametersTankPlane.x + 350 >= explosionPosition.x
+    ) {
+      console.log("🚀 ~ explosionPosition ~ bum:");
+    }
+  }, [explosionPosition, parametersTankPlane.x]);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setPosition((prevPosition) => {
-        const newPosition = prevPosition - 20; // Tính toán vị trí mới dựa trên thời gian và tốc độ
-        if (newPosition <= -200) {
-          return 1000; // Đảm bảo vật thể di chuyển chính xác đến vị trí cuối cùng
+      setParametersTankPlane((prev) => {
+        const newPosition = prev.x - 20;
+        if (newPosition <= -800) {
+          const positionNew =
+            Math.floor(Math.random() * (2000 - 1000 + 1)) + 1000;
+          return { ...prev, x: positionNew, isShow: false };
         }
-        return newPosition;
+        return { ...prev, x: newPosition, isShow: true };
       });
     }, 100);
-
-    return () => clearInterval(interval); // Hủy interval khi component unmount
+    return () => clearInterval(interval);
   }, []);
 
   return (
-    <div
-      className="plane"
-      style={{
-        left: `${position}px`,
-      }}
-    >
-      <Health />
-      <img src={planeImg} />
-    </div>
+    <>
+      {parametersTankPlane.isShow && (
+        <div
+          className="plane"
+          style={{
+            left: `${parametersTankPlane.x}px`,
+            top: topPlane,
+          }}
+        >
+          <Health />
+        </div>
+      )}
+    </>
   );
 };
 

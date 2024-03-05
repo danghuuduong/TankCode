@@ -1,10 +1,10 @@
 .plane {
+  background-image: url("../../../img/plane.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  height: 170px;
   position: absolute;
-  top: 20px;
   transition: 0.2s linear;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  max-width: fit-content;
-  transform: scale(0.5);
+  width: 350px;
 }

@@ -3,14 +3,19 @@ import "./Game.css";
 import Tank from "./Tank/Tank";
 import Plane from "./Plane/Plane";
 import Bullet from "./Bullet/Bullet";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   movementLeft,
   movementRight,
 } from "../../features/TankMovement/TankMovementSlice";
 import { setMousePosition } from "../../features/MousePosition/MousePosition";
+import Explosion from "./Explosion/explosion";
 const Game = () => {
   const dispatch = useDispatch();
+
+  const {isBullet} = useSelector((state) => {
+    return state.mousePosition;
+  });
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -27,19 +32,23 @@ const Game = () => {
     const handleMouseClick = (event) => {
       const x = event.clientX;
       const y = event.clientY;
-      dispatch(setMousePosition({ isBullet: true, x, y }));
+      if (!isBullet) {
+
+        dispatch(setMousePosition({ isBullet: true, x, y }));
+      }
     };
     window.document.addEventListener("click", handleMouseClick);
     return () => {
       window.document.removeEventListener("click", handleMouseClick);
     };
-  }, []);
+  }, [dispatch, isBullet]);
 
   return (
     <div className="game">
       <Tank />
       <Bullet />
       <Plane />
+      <Explosion />
     </div>
   );
 };
