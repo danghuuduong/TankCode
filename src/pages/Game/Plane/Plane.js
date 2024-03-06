@@ -2,48 +2,79 @@ import { useEffect, useState } from "react";
 import Health from "./Health/Health";
 import "./Plane.css";
 import { useSelector } from "react-redux";
+
 const Plane = () => {
-  const [parametersTankPlane, setParametersTankPlane] = useState({
+  const topPlane = 20;
+
+  const [parametersPlane, setParametersPlane] = useState({
     x: 1000,
+    y: topPlane,
     isShow: true,
   });
-  const topPlane = 20;
+  const [shotHit, setShotHit] = useState(false);
 
   const explosionPosition = useSelector((state) => {
     return state.explosionPosition;
   });
-  useEffect(() => {
-    if (
-      parametersTankPlane.x <= explosionPosition.x &&
-      parametersTankPlane.x + 350 >= explosionPosition.x
-    ) {
-      console.log("🚀 ~ explosionPosition ~ bum:");
-    }
-  }, [explosionPosition, parametersTankPlane.x]);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setParametersTankPlane((prev) => {
-        const newPosition = prev.x - 20;
-        if (newPosition <= -800) {
-          const positionNew =
-            Math.floor(Math.random() * (2000 - 1000 + 1)) + 1000;
-          return { ...prev, x: positionNew, isShow: false };
-        }
-        return { ...prev, x: newPosition, isShow: true };
-      });
+      if (shotHit) {
+        setParametersPlane((prev) => {
+          const newPositionY = prev.y + 30;
+
+          if (newPositionY >= 1000) {
+            clearInterval(interval);
+            setParametersPlane({...parametersPlane,isShow:false})
+          }
+          return { ...prev, y: newPositionY };
+        });
+      } else {
+        setParametersPlane((prev) => {
+          const newPosition = prev.x - 20;
+          if (newPosition <= -800) {
+            const positionNew =
+              Math.floor(Math.random() * (2000 - 1000 + 1)) + 1000;
+            return { ...prev, x: positionNew, isShow: false };
+          }
+          return { ...prev, x: newPosition, isShow: true };
+        });
+      }
     }, 100);
     return () => clearInterval(interval);
-  }, []);
+  }, [shotHit]);
 
+  useEffect(() => {
+    if (explosionPosition.isExplosion) {
+      const planeX = parametersPlane.x;
+      const planeY = 20;
+      const explosionX = explosionPosition.x;
+      const explosionY = explosionPosition.y;
+      if (
+        planeX <= explosionX &&
+        planeX + 350 >= explosionX &&
+        planeY <= explosionY &&
+        planeY + 170 >= planeY
+      ) {
+        setShotHit(true);
+      }
+    }
+  }, [
+    explosionPosition.isExplosion,
+    explosionPosition.x,
+    explosionPosition.y,
+    parametersPlane.x,
+  ]);
   return (
     <>
-      {parametersTankPlane.isShow && (
+      {parametersPlane.isShow && (
         <div
-          className="plane"
+          className={
+            `plane ${shotHit && "shotHit"}`
+          }
           style={{
-            left: `${parametersTankPlane.x}px`,
-            top: topPlane,
+            left: `${parametersPlane.x}px`,
+            top: parametersPlane.y,
           }}
         >
           <Health />

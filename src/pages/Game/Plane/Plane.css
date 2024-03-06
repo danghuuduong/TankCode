@@ -8,3 +8,17 @@
   transition: 0.2s linear;
   width: 350px;
 }
+
+.shotHit{
+  animation: shotHit-animation 2.1s ease-in-out forwards;
+}
+
+@keyframes shotHit-animation {
+  
+  0% {
+   
+  }
+  100% {
+    transform: rotate(-45deg); /* Giữ nguyên ở bottom */
+  }
+}
